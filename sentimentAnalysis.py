@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from os import system, name
+import torch
 import torch.nn as nn
 import pickle
 from tkinter import *
@@ -48,17 +49,17 @@ sentimentModel.eval()
 #Creating gui
 window = Tk()
 window.title('Simple Sentiment Analysis')
-window.geometry("400x400")
-window.minsize(400, 400)
-window.maxsize(400, 400)
+window.geometry("1000x1000")
+window.minsize(1000, 1000)
+window.maxsize(1000, 1000)
 window.configure(background = 'black')
 l = Label(window, text= 'Enter your comment:',bg = 'black', fg = 'white', font = 'none 12 bold')
-l.place(x=200, y=50, anchor="center")
-textentry = Entry(window, width = 50, bg = 'white')
-textentry.place(x=200, y=75, anchor="center")
-output = Text(window,width=2,height = 1, wrap = WORD , background='black',fg='white', font = ("Courier", 144),highlightthickness = 0, borderwidth=0,state=DISABLED)
-output.place(x=220, y=200, anchor="center")
+l.place(x=500, y=50, anchor="center")
+textentry = Entry(window, width = 50,font = ("Courier", 18), bg = 'white')
+textentry.place(x=500, y=75, anchor="center")
+output = Text(window,width=2,height = 1, wrap = WORD , background='black',fg='white', font = ("Courier", 288),highlightthickness = 0, borderwidth=0,state=DISABLED)
+output.place(x=520, y=500, anchor="center")
 exitButton = Button(window, text ='Exit',width=14,command=close_window, justify='center')
-exitButton.place(x=200, y=387, anchor="center")
+exitButton.place(x=500, y=987, anchor="center")
 window.bind('<Return>',click)
 window.mainloop()
