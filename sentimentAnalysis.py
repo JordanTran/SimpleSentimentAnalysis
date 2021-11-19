@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import pickle
 from tkinter import *
+import threading 
 #Feedfoward network
 class SimpleNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
@@ -23,19 +24,23 @@ class SimpleNetwork(nn.Module):
 #returning emoji from sentence input
 def emogen(sentence, vect , tf):
         comment = np.array([sentence])
-        sentiment = {0:emoji.emojize(":pensive_face:"),
+        sentiment = {0:emoji.emojize(":pleading_face:"),
             1:emoji.emojize(":neutral_face:"),
-            2:emoji.emojize(":smiling_face_with_smiling_eyes:")}
+            2:emoji.emojize(":grinning_face_with_smiling_eyes:")}
         prediction = sentimentModel(torch.tensor((tf.transform(vect.transform(comment)).astype(np.float32).toarray())))
         return sentiment[prediction.detach().numpy().argmax()]
+def clear():
+    output.delete(0.0,END)
+    textentry.delete(0,END)
+    output.config(state=DISABLED)
 def click(e):
     entered = textentry.get()
-    textentry.delete(0,END)
     output.config(state=NORMAL)
     output.delete(0.0,END)
     #output.insert(END, entered+'\n')
     output.insert(END, emogen(entered,vect,tf))
-    output.config(state=DISABLED)
+    delay = threading.Timer(2,clear)
+    delay.start()
 def close_window():
     window.destroy()
     exit()
@@ -57,9 +62,10 @@ l = Label(window, text= 'Enter your comment:',bg = 'black', fg = 'white', font =
 l.place(x=500, y=50, anchor="center")
 textentry = Entry(window, width = 50,font = ("Courier", 18), bg = 'white')
 textentry.place(x=500, y=75, anchor="center")
-output = Text(window,width=2,height = 1, wrap = WORD , background='black',fg='white', font = ("Courier", 288),highlightthickness = 0, borderwidth=0,state=DISABLED)
+output = Text(window,width=2,height = 1, wrap = WORD , background='black',fg='white', font = ("Courier", 350),highlightthickness = 0, borderwidth=0,state=DISABLED)
 output.place(x=520, y=500, anchor="center")
 exitButton = Button(window, text ='Exit',width=14,command=close_window, justify='center')
 exitButton.place(x=500, y=987, anchor="center")
 window.bind('<Return>',click)
+
 window.mainloop()
