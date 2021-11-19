@@ -29,16 +29,23 @@ def emogen(sentence, vect , tf):
             2:emoji.emojize(":grinning_face_with_smiling_eyes:")}
         prediction = sentimentModel(torch.tensor((tf.transform(vect.transform(comment)).astype(np.float32).toarray())))
         return sentiment[prediction.detach().numpy().argmax()]
+def computeWeights(entered,vect,tf):
+    comment = np.array([entered])
+    prediction = sentimentModel(torch.tensor((tf.transform(vect.transform(comment)).astype(np.float32).toarray()))).detach().numpy()
+    return "Negative Score: " + str(prediction[0][0])+ "\nNeutral Score: "+str(prediction[0][1])+ "\nPositive Score: "+ str(prediction[0][2])
 def clear():
     output.delete(0.0,END)
     textentry.delete(0,END)
+    weights.delete(0.0,END)
     output.config(state=DISABLED)
+    weights.config(state=DISABLED)
 def click(e):
     entered = textentry.get()
     output.config(state=NORMAL)
-    output.delete(0.0,END)
+    weights.config(state=NORMAL)
     #output.insert(END, entered+'\n')
     output.insert(END, emogen(entered,vect,tf))
+    weights.insert(END, computeWeights(entered,vect,tf))
     delay = threading.Timer(2,clear)
     delay.start()
 def close_window():
@@ -68,6 +75,8 @@ output = Text(window,width=2,height = 1, wrap = WORD , background='black',fg='wh
 output.place(x=width/2, y=height/2, anchor="center")
 exitButton = Button(window, text ='Exit',font = 'none 12 bold',width=14,command=close_window, justify='center')
 exitButton.place(x=width/2, y=height-100, anchor="center")
+weights = Text(window,width=50,height = 10, wrap = WORD , background='black',fg='white', font = ("Courier", 12),highlightthickness = 0, borderwidth=0,state=DISABLED)
+weights.place(x=400, y=height-100, anchor="center")
 window.bind('<Return>',click)
 
 window.mainloop()
